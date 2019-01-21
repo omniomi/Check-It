@@ -30,7 +30,7 @@ In order to make Pester useful for automated infrastructure and configuration ch
 
 ### Configuration
 
-There are multiple options in [.\src\config.ps1](config.ps1) related to notifications such as SMTP server options, subject text, message text, and so on. Before scheduling Check-It make sure your configuration is correct.
+There are multiple options in [config.ps1](src/config.ps1) related to notifications such as SMTP server options, subject text, message text, and so on. Before scheduling Check-It make sure your configuration is correct.
 
 ### Specifying Recipients
 
@@ -71,7 +71,7 @@ In order to send Microsoft Teams notifications you will need to add a webhook to
 [CITeamsNotifications('webhook url here')]
 ```
 
-There is configuration in [.\src\config.ps1](config.ps1) for the color used across the top of the notification and the icon included in the message.
+There is configuration in [config.ps1](src/config.ps1) for the color used across the top of the notification and the icon included in the message.
 
 #### Multiple Recipients
 
@@ -84,10 +84,10 @@ param()
 
 ## Scheduling
 
-It is only necessary to create a single Schedule Task or job. Schedule the execution of [.\src\RunChecks.ps1](RunChecks.ps1) and it will automatically iterate through all of the checks in [.\src\Checks\\](.\checks\\) on each run. When adding a new check file there is no need to modify the task.
+It is only necessary to create a single Scheduled Task or job. Schedule the execution of [RunChecks.ps1](src/RunChecks.ps1) and it will automatically iterate through all of the checks on each run. When adding a new check file there is no need to modify the task.
 
-The task should be scheduled to run every hour forever. Checks in .daily will be executed during the first run after the daily run time config hour (default 8AM) while the .hourly checks will execute on every run.
+**Task schedule:** The task should be scheduled to run every hour forever. Checks in .daily will be executed during the first run after the daily run time config hour (default 8AM) while the .hourly checks will execute on every run. (See config file)
 
 ### Disabling a Check
 
-In [.\src\config.ps1](config.ps1) you can add a check file to `$ExcludeChecks` if you want it to be ignored.
+In [config.ps1](src/config.ps1) you can add a check file to `$ExcludeChecks` if you want it to be ignored.
