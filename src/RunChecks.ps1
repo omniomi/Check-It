@@ -1,11 +1,11 @@
 #Requires -Modules Pester
 ###############################################################################
-# Check-It ~ daily check list runner.
+# Check-It ~ daily/hourly check list runner.
 #
 # This script is the entry point and can be scheduled in Task Scheduler or
 # a CI tool like TeamCity without parameters.
 #
-# For instructions on creating tests see the included ./docs files.
+# Please make all changes in the included config.ps1
 #
 
 ###############################################################################
