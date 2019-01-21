@@ -4,6 +4,10 @@
 
 Check-It is an email notification wrapper for [Pester](https://github.com/pester/Pester/) tests in PowerShell. The goal behind Check-It is to make it easy to write infrastructure or configuration checks in Pester and have the results emailed to you or a team on a schedule.
 
+|Master   |  Development
+|:------:|:------:
+|[![Build status](https://ci.appveyor.com/api/projects/status/github/omniomi/check-it?branch=master&svg=true)](https://ci.appveyor.com/project/omniomi/check-it/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/github/omniomi/check-it?branch=development&svg=true)](https://ci.appveyor.com/project/omniomi/check-it/branch/development)
+
 ## Pester
 
 Pester is a test framework for PowerShell. It provides a language that allows you to define test cases, and the Invoke-Pester cmdlet to execute these tests and report the results.
