@@ -1,5 +1,7 @@
 # Check-It - A daily check list runner.
 
+![Example Notification](https://i.imgur.com/Uk7yN2q.png "Example Notification")
+
 Check-It is an email notification wrapper for [Pester](https://github.com/pester/Pester/) tests in PowerShell. The goal behind Check-It is to make it easy to write infrastructure or configuration checks in Pester and have the results emailed to you or a team on a schedule.
 
 ## Pester
@@ -62,6 +64,8 @@ param()
 ```
 
 ### Microsoft Teams
+
+![Example Notification](https://i.imgur.com/kmtYTDE.png "Example Notification")
 
 NOTE: Teams notifications are only sent on failure and there is no SendOnSuccess option.
 
