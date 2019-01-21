@@ -6,7 +6,7 @@ build: off
 branches:
   only:
     - master
-    - development
+    - develop
 
 skip_commits:
     message: /skip\-tests/
