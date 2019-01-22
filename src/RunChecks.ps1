@@ -78,7 +78,7 @@ foreach ($Check in $CheckFiles) {
     Write-Verbose "... Pester Failed count: $($Results.FailedCount)"
 
     # Send notifications
-    if (-not($NotificationsEnabled) -or -not($SuppressNotifications)) {
+    if (-not($NotificationsEnabled) -or $SuppressNotifications) {
         Write-Verbose "... Notifications suppressed. Skipping."
         break
     }
