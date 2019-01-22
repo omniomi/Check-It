@@ -7,15 +7,6 @@
 #
 # Please make all changes in the included config.ps1
 #
-[cmdletbinding()]
-param(
-    [parameter()]
-    [ValidateSet('all','none','failed','passed','skipped','summary','pending','inconclusive','header','fails','describe','context')]
-    [string[]]$Show = 'none',
-
-    [parameter()]
-    [switch]$SuppressNotifications
-)
 
 ###############################################################################
 # Load Dependencies
@@ -46,9 +37,10 @@ $checkit.context.push(@{
 try {
     Write-Verbose "Loading Configuration"
      . (Get-Item (Join-Path $PSScriptRoot 'config.ps1') | Select-Object -ExpandProperty FullName)
-} catch {
+ }
+ catch {
     $PSCmdlet.ThrowTerminatingError($PSItem)
-}
+ }
 
 foreach ($Block in $checkit.context.Peek().properties) {
     . $Block
@@ -64,8 +56,7 @@ if ((Get-Date).Hour -eq $DailyRunTime) {
 }
 
 foreach ($Check in $CheckFiles) {
-    Write-Verbose "Running checks in $($Check.Name)"
-    # Pull notification attributes from file
+    # Pull attributes from file
     $Notify      = Get-Item $Check.FullName |
                      Get-Command { $_.FullName } |
                      Select-Object @{ n = 'opts' ; e = { $_.ScriptBlock.Attributes.Where{ $_.TypeID.Name -eq 'CINotifications' } } }
@@ -74,37 +65,28 @@ foreach ($Check in $CheckFiles) {
                      Select-Object @{ n = 'opts' ; e = { $_.ScriptBlock.Attributes.Where{ $_.TypeID.Name -eq 'CITeamsNotifications' } } }
 
     # Run tests
-    $Results = Invoke-Pester $Check.FullName -PassThru -Show $Show
-    Write-Verbose "... Pester Failed count: $($Results.FailedCount)"
+    $Results = Invoke-Pester $Check.FullName -Show None -PassThru
 
     # Send notifications
-    if (-not($NotificationsEnabled) -or $SuppressNotifications) {
-        Write-Verbose "... Notifications suppressed. Skipping."
-        break
-    }
-
-    ## Email notifications
-    if ($Notify.opts.Address) {
-        if ($Results.FailedCount -eq 0 -and -not($Notify.opts.SendOnSuccess)) {
-            continue
-        } else {
-            if ($Notify.opts.SendOnSuccess -and $Notify.opts.Address -eq $Notify.opts.SuccessAddress) {
-                $SendTo = $Notify.opts.Address
-            } elseif ($Notify.opts.SendOnSuccess -and $Notify.opts.Address -ne $Notify.opts.SuccessAddress) {
-                if ($Results.FailedCount -ge 1) {
-                    $SendTo = @($Notify.opts.Address,$Notify.opts.SuccessAddress)
-                } else {
-                    $SendTo = $Notify.opts.SuccessAddress
-                }
-            } elseif (-not($Notify.opts.SendOnSuccess) -and $Results.FailedCount -ge 1) {
-                $SendTo = $Notify.opts.Address
+    if ($Results.FailedCount -eq 0 -and $Notify.opts.SendOnSuccess -eq 0) {
+        continue
+    } elseif ($NotificationsEnabled -eq $false -or -not($Notify.opts.Address)) {
+        continue
+    } else {
+        if ($Notify.opts.SendOnSuccess -eq 1 -and $Notify.opts.Address -eq $Notify.opts.SuccessAddress) {
+            $SendTo = $Notify.opts.Address
+        } elseif ($Notify.opts.SendOnSuccess -eq 1 -and $Notify.opts.Address -ne $Notify.opts.SuccessAddress) {
+            if ($Results.FailedCount -ge 1) {
+                $SendTo = @($Notify.opts.Address,$Notify.opts.SuccessAddress)
+            } else {
+                $SendTo = $Notify.opts.SuccessAddress
             }
-
-            SendNotification $Results.TestResult $Check.Name $SendTo
+        } elseif ($Notify.opts.SendOnSuccess -eq 0 -and $Results.FailedCount -ge 1) {
+            $SendTo = $Notify.opts.Address
         }
-    }
 
-    ## Teams notifications
+        SendNotification $Results.TestResult $Check.Name $SendTo
+    }
     if ($TeamsNotify.opts.Uri -and $Results.FailedCount -ge 1) {
         SendTeamsNotification $Results.TestResult $Check.Name $TeamsNotify.opts.Uri
     }
