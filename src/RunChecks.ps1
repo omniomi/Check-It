@@ -10,7 +10,10 @@
 param(
     [parameter()]
     [ValidateSet('all','none','failed','passed','skipped','summary','pending','inconclusive','header','fails','describe','context')]
-    [string[]]$Show = 'none'
+    [string[]]$Show = 'none',
+
+    [parameter()]
+    [switch]$SuppressNotifications
 )
 
 ###############################################################################
@@ -90,9 +93,11 @@ foreach ($Check in $CheckFiles) {
             $SendTo = $Notify.opts.Address
         }
 
-        SendNotification $Results.TestResult $Check.Name $SendTo
+        if (-not($SuppressNotifications)) {
+            SendNotification $Results.TestResult $Check.Name $SendTo
+        }
     }
-    if ($TeamsNotify.opts.Uri -and $Results.FailedCount -ge 1) {
+    if ($TeamsNotify.opts.Uri -and $Results.FailedCount -ge 1 -and -not($SuppressNotifications)) {
         SendTeamsNotification $Results.TestResult $Check.Name $TeamsNotify.opts.Uri
     }
 }
