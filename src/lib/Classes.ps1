@@ -1,9 +1,9 @@
 Class CINotifications : Attribute {
     [string[]]$Address
     [string[]]$SuccessAddress
-    [int]$SendOnSuccess
+    [bool]$SendOnSuccess
 
-    CINotifications ([string[]]$Address, [int]$SendOnSuccess = 0, [string[]]$SuccessAddress) {
+    CINotifications ([string[]]$Address, [bool]$SendOnSuccess, [string[]]$SuccessAddress) {
         $This.Address       = $Address
         $This.SendOnSuccess = $SendOnSuccess
         if ($null -ne $SuccessAddress) {
@@ -13,9 +13,15 @@ Class CINotifications : Attribute {
         }
     }
 
-    CINotifications ([string[]]$Address, [int]$SendOnSuccess = 0) {
+    CINotifications ([string[]]$Address, [bool]$SendOnSuccess) {
         $This.Address        = $Address
         $This.SendOnSuccess  = $SendOnSuccess
+        $This.SuccessAddress = $Address
+    }
+
+    CINotifications ([string[]]$Address) {
+        $This.Address        = $Address
+        $This.SendOnSuccess  = $false
         $This.SuccessAddress = $Address
     }
 }
