@@ -7,6 +7,7 @@
 #
 # Please make all changes in the included config.ps1
 #
+[cmdletbinding()]
 param(
     [parameter()]
     [ValidateSet('all','none','failed','passed','skipped','summary','pending','inconclusive','header','fails','describe','context')]
@@ -63,6 +64,7 @@ if ((Get-Date).Hour -eq $DailyRunTime) {
 }
 
 foreach ($Check in $CheckFiles) {
+    Write-Verbose "Running checks in $($Check.Name)"
     # Pull notification attributes from file
     $Notify      = Get-Item $Check.FullName |
                      Get-Command { $_.FullName } |
@@ -73,9 +75,11 @@ foreach ($Check in $CheckFiles) {
 
     # Run tests
     $Results = Invoke-Pester $Check.FullName -PassThru -Show $Show
+    Write-Verbose "... Pester Failed count: $($Results.FailedCount)"
 
     # Send notifications
     if (-not($NotificationsEnabled) -or -not($SuppressNotifications)) {
+        Write-Verbose "... Notifications suppressed. Skipping."
         break
     }
 
