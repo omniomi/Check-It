@@ -7,6 +7,11 @@
 #
 # Please make all changes in the included config.ps1
 #
+param(
+    [parameter()]
+    [ValidateSet('all','none','failed','passed','skipped','summary','pending','inconclusive','header','fails','describe','context')]
+    [string[]]$Show = 'none'
+)
 
 ###############################################################################
 # Load Dependencies
@@ -65,7 +70,7 @@ foreach ($Check in $CheckFiles) {
                      Select-Object @{ n = 'opts' ; e = { $_.ScriptBlock.Attributes.Where{ $_.TypeID.Name -eq 'CITeamsNotifications' } } }
 
     # Run tests
-    $Results = Invoke-Pester $Check.FullName -Show None -PassThru
+    $Results = Invoke-Pester $Check.FullName -PassThru -Show $Show
 
     # Send notifications
     if ($Results.FailedCount -eq 0 -and $Notify.opts.SendOnSuccess -eq 0) {
