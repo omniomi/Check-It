@@ -184,12 +184,22 @@ function SendNotification {
 
     $MessageSubject = "[$Condition] $Subject - $($FileName.ToLower())"
 
+    $SmtpSplat = @{
+        Body       = $Output
+        BodyAsHtml = $true
+        Subject    = $MessageSubject
+        To         = $Address
+        From       = $Smtp.From
+        SmtpServer = $Smtp.Server
+        Port       = $Smtp.Port
+        Priority   = $Priority
+    }
+
     if ($Smtp.Username) {
         $Password = ConvertTo-SecureString $Smtp.Password -AsPlainText -Force
         $Credential = [System.Management.Automation.PSCredential]::New($Smtp.Username,$Password)
-    } else {
-        $Credential = [System.Management.Automation.PSCredential]::Empty
+        $SmtpSplat.Credential = $Credential
     }
 
-    Send-MailMessage -Body $Output -BodyAsHtml -Subject $MessageSubject -To $Address -From $Smtp.From -SmtpServer $Smtp.Server -Port $Smtp.Port -Priority $Priority -Credential $Credential
+    Send-MailMessage @SmtpSplat
 }
