@@ -7,6 +7,7 @@ Check-It is an email notification wrapper for [Pester](https://github.com/pester
 |Master   |  Development
 |:------:|:------:
 |[![Build status](https://ci.appveyor.com/api/projects/status/github/omniomi/check-it?branch=master&svg=true)](https://ci.appveyor.com/project/omniomi/check-it/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/github/omniomi/check-it?branch=develop&svg=true)](https://ci.appveyor.com/project/omniomi/check-it/branch/develop)
+[Download](https://ci.appveyor.com/project/omniomi/check-it/branch/master/artifacts)|[Download](https://ci.appveyor.com/project/omniomi/check-it/branch/develop/artifacts)
 
 ## Pester
 
