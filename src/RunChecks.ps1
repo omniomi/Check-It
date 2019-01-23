@@ -11,7 +11,6 @@
 param(
     # Path to Pester test files. Default: .\Checks\
     [parameter()]
-    [ValidatePathExists()]
     [string]$Path = (Join-Path $PSScriptRoot 'Checks'),
 
     # Pass -Show parameter options to Invoke-Pester.
