@@ -5,13 +5,6 @@
 CIConfig {
     # --------------------------- Basic properties ----------------------------
 
-    # Daily execution time - specifies at what time each day the .daily checks should run.
-    # Specify the hour in 24 hour time. Checks will run on first execution after that hour.
-    # Ie, if the task runs every hour at quarter-after and this is set to 8 the daily checks
-    # will run at 8:15.
-    [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
-    $DailyRunTime = 8
-
     # Email template files
     [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
     $TemplateTop    = "$PSScriptRoot\lib\template.top.html"
