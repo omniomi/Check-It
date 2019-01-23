@@ -1,18 +1,24 @@
 #Requires -Modules Pester
-###############################################################################
-# Check-It ~ daily/hourly check list runner.
-#
-# This script is the entry point and can be scheduled in Task Scheduler or
-# a CI tool like TeamCity without parameters.
-#
-# Please make all changes in the included config.ps1
-#
+<#
+.SYNOPSIS
+    Runs Pester tests and sends the results as an email and/or Teams notification.
+.DESCRIPTION
+    Runs one or more Pester test files found in a directory. Each file containing pester
+    tests is checked for special attributes that tell the script where to send alerts about
+    the results.
+#>
 [cmdletbinding()]
 param(
+    # Path to Pester test files. Default: .\Checks\
+    [parameter()]
+    [string]$Path = (Join-Path $PSScriptRoot 'Checks'),
+
+    # Pass -Show parameter options to Invoke-Pester.
     [parameter()]
     [ValidateSet('all','none','failed','passed','skipped','summary','pending','inconclusive','header','fails','describe','context')]
     [string[]]$Show = 'none',
 
+    # Do not send email or Teams notifications. Can be set permanently in .\config.ps1
     [parameter()]
     [switch]$SuppressNotifications
 )
@@ -58,10 +64,7 @@ foreach ($Block in $checkit.context.Peek().properties) {
 # Run Tests
 ###############################################################################
 
-$CheckFiles = @(Get-ChildItem "$PSScriptRoot\Checks.hourly" -Exclude $ExcludeChecks -Filter *.ps1 -Recurse)
-if ((Get-Date).Hour -eq $DailyRunTime) {
-    $CheckFiles += @(Get-ChildItem "$PSScriptRoot\Checks.daily" -Exclude $ExcludeChecks -Filter *.ps1 -Recurse)
-}
+$CheckFiles = @(Get-ChildItem $Path -Exclude $ExcludeChecks -Filter *.ps1 -Recurse)
 
 foreach ($Check in $CheckFiles) {
     Write-Verbose "Running checks in $($Check.Name)"

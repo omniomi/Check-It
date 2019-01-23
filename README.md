@@ -93,9 +93,12 @@ param()
 
 ## Scheduling
 
-It is only necessary to create a single Scheduled Task or job. Schedule the execution of [RunChecks.ps1](src/RunChecks.ps1) and it will automatically iterate through all of the checks on each run. When adding a new check file there is no need to modify the task.
+Schedule the execution of [RunChecks.ps1](src/RunChecks.ps1) and it will automatically iterate through all of the checks in [.\Checks\](src/Checks) on each run. When adding a new check file there is no need to modify the task.
 
-**Task schedule:** The task should be scheduled to run every hour forever. Checks in .daily will be executed during the first run after the daily run time config hour (default 8AM) while the .hourly checks will execute on every run. (See config file)
+### Alternate schedules
+
+If you need certain checks to run at different times the script includes a `-Path` parameter to override the default check path. For example, you could create a Checks.Hourly folder and schedule [RunChecks.ps1](src/RunChecks.ps1) with `-Path <full path>\Checks.Daily`
+
 
 ### Disabling a Check
 
